@@ -20,8 +20,9 @@ SQueLo is a simple SQL Database Management System that allows users to create, v
    
    ```
 2. Install dependencies:
-   
+   ```
    pip install mysql-connector-python
+   ```
    set up user name and pass word as your choice just edit them in the code
    
 4. Run the application:
