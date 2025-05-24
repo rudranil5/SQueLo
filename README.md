@@ -18,7 +18,7 @@ SQueLo is a simple SQL Database Management System that allows users to create, v
    
    git clone https://github.com/rudranil5/SQueLo.git
    
-   ```
+   
 2. Install dependencies:
    ```
    pip install mysql-connector-python
@@ -36,3 +36,6 @@ to be uploaded after GUI integration
 
 ## License
 MIT License
+
+
+-----rudranil(personal)
