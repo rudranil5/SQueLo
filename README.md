@@ -2,6 +2,7 @@
 # SQueLo
 
 SQueLo is a simple SQL Database Management System that allows users to create, view, and delete databases or tables in MySQL through an intuitive menu-driven interface—no SQL command knowledge required!
+This can also enter data into any table with any number of rows. one at a time
 
 ## Features
 - Create, view, and delete databases
