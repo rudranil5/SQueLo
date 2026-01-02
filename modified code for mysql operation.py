@@ -1,13 +1,17 @@
-#Modified MySQL operation code
+2#Modified MySQL operation code
 #code to create or delete a database and table in mysql
+connection=None
+cursor=None
 import mysql.connector as sql
 
 def connection_to_server():
+    global connection
     connection=sql.connect(host='localhost',user='root',password='root')                    #connection to mysql server 
     if connection.is_connected():
         print(connection)                                                                   #checking for the connection
         print('connected')
-        
+    else:
+        print("not connected")
     return connection
 
 def create_database():
@@ -16,20 +20,26 @@ def create_database():
     print('Database created successfully  ')
 
 def Database_showing():
+    global cursor
+    connection_to_server()
+    cursor=connection.cursor()
     cursor.execute("show databases;")
     for i in cursor:
         print(i)
 
 def Table_showing():#error error error
+    list1=[]
     cursor.execute('show tables')
     print("this database contains following tables")
     for i in cursor:
         print(i)
-    else:                           #if no data in table 
-        print("No table found ")    
+        list1.append(i)
+    if len(list1)==0:                           #if no data in table 
+        print("No table found\n ")
         #break
     
 def Table_data_showing():
+    Table=input("Enter the table name: ")
     cursor.execute("select * from %s "%Table)
     for i in cursor:
         print(i)
@@ -60,6 +70,48 @@ def Table_creation():
     print(create_table_command)
     cursor.execute(create_table_command)
 
+def insertRow_unknown():#table needed to be specified  by user
+    workingDatabase=input("Enter the database name : ")
+    connection=sql.connect(host='localhost',user='root',password='root',database=workingDatabase)      #connection to database
+    if connection.is_connected():          #to check if connection is done
+        print(connection)      
+        print(f'connected to database {workingDatabase}')
+    cursor=connection.cursor()
+
+    print(f"The following Tables are found in the database {workingDatabase}")
+    cursor.execute('show tables')
+    k=cursor.fetchall()# list of tuples
+    for i in k :
+        print(i)
+    print('\n')
+    
+
+    table=input("choose the table to work with : \n  --- ")
+    if table.isnumeric():
+        print("Table : table \n")
+        
+        table=str(k[(int(table))-1][0])
+
+    cursor.execute(f"desc {table}")
+    k=cursor.fetchall()
+    for i in k:
+        print(i)
+    print("\n")
+
+    query=(f"Insert into {table} values(")
+    values=[]
+    for i in range(len(k)):
+        query+="%s,"
+        dd=k[i][0]
+        tt=input(f"Enter the {dd} ")
+        values.append(tt)if k[i][1][:7]=="varchar" else values.append (int(tt))
+    query=(query[:-1])+")"
+    
+    print(query)
+    print(tuple(values))
+    cursor.execute(query,tuple(values))
+    connection.commit()
+    
 
 def end():
     print("re - run to try again\n you must enter valid password !!!")
@@ -67,7 +119,7 @@ def end():
 
         
 
-print('Hi \n what do u want to do among these \n 1.Create a Database \n 2.Create Table \n 3.Delete database \n 4.Delete Table \n 5. Close\n\t Type the key associated to your choice \n')
+print('Hi \n what do u want to do among these \n 1.Create a Database \n 2.Create Table \n 3.Delete database \n 4.Delete Table \n 5.View Database&Tables \n 6.Insert Data into any table \n 7. Close\n\t Type the key associated to your choice \n')
 choice=input()                                      #taking the input  from user to work further
 while choice:
     if choice=='1':
@@ -132,15 +184,31 @@ while choice:
             print("Table deleted successfuly\n\n")
         else:
             print("operation cancelled\n")
-            
-                    
+
+    elif choice=='5':
+         Database_showing()
+         print("\nSelect the database you want to use : ")
+         Database=input('\n\n')
+         cursor.execute("use %s "%Database)
+         Table_showing()
+         c=input("want to view table or table data?? y/n : ")
+         if c=='y' or c=='Y':
+             print("Choose a table to see data")
+             Table_data_showing()
+             
+    elif choice=='6':
+        insertRow_unknown()
                 
     else:
         print('you have chosen not to do anything   ... bye,,, ')
-        sys.exit()
+        try:
+            connection.close()
+        except:
+            print('closing...')
+        exit()
     
         break                               #to terminate loop
-    choice=input('want to work further?  \n 1.Create a Database \n 2.Create Table \n 3. Delete Database \n 4.Delete Table \n 5.Close\n\t Type the key associated to your choice \n') # asking if to re run the loop 
+    choice=input('want to work further?  \n 1.Create a Database \n 2.Create Table \n 3. Delete Database \n 4.Delete Table \n 5.View Database&Tables \n 6.Insert Data into any table\n 7.Close\n\t Type the key associated to your choice \n') # asking if to re run the loop 
         
         
 
