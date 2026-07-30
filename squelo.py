@@ -1,4 +1,4 @@
-2#Modified MySQL operation code
+#Modified MySQL operation code
 #code to create or delete a database and table in mysql
 connection=None
 cursor=None
